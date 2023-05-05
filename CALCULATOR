@@ -1,0 +1,191 @@
+style.css
+.calculator {
+    width: 300px;
+    background-color: #f2f2f2;
+    border-radius: 5px;
+    margin: 0 auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+  }
+  
+  .display {
+    background-color: #fff;
+    border-radius: 5px;
+    padding: 10px;
+    margin-bottom: 10px;
+  }
+  
+  .input {
+    font-size: 36px;
+    text-align: right;
+    padding: 10px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  
+  .output {
+    font-size: 24px;
+    text-align: right;
+    color: #999;
+    padding: 5px 10px;
+  }
+  
+  .buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-gap: 10px;
+  }
+  
+  button {
+    height: 50px;
+    border: none;
+    background-color: #fff;
+    font-size: 24px;
+    color: #333;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: #ddd;
+  }
+  
+  .operator {
+    background-color: #f2f2f2;
+    color: #333;
+  }
+  
+  .number {
+    background-color: #fff;
+  }
+  
+  #clear {
+    grid-column: 1 / span 2;
+  }
+  
+  #backspace {
+    font-size: 20px;
+  }
+  
+  #equals {
+    grid-row: 4 / span 2;
+  }
+  
+  
+  
+HTML-
+  <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="calculator">
+    <div class="display">
+      <div class="input" id="input">0</div>
+      <div class="output" id="output"></div>
+    </div>
+    <div class="buttons">
+      <button class="operator" id="clear">C</button>
+      <button class="operator" id="backspace">&#8592;</button>
+      <button class="operator" id="divide">&#247;</button>
+      <button class="number" id="seven">7</button>
+      <button class="number" id="eight">8</button>
+      <button class="number" id="nine">9</button>
+      <button class="operator" id="multiply">&times;</button>
+      <button class="number" id="four">4</button>
+      <button class="number" id="five">5</button>
+      <button class="number" id="six">6</button>
+      <button class="operator" id="subtract">&minus;</button>
+      <button class="number" id="one">1</button>
+      <button class="number" id="two">2</button>
+      <button class="number" id="three">3</button>
+      <button class="operator" id="add">+</button>
+      <button class="number" id="zero">0</button>
+      <button class="number" id="decimal">.</button>
+      <button class="operator" id="equals">=</button>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
+
+SCRIPT.JS
+const input = document.getElementById('input');
+const output = document.getElementById('output');
+
+let num1 = '';
+let num2 = '';
+let operator = '';
+
+function clear() {
+  input.innerText = '0';
+  output.innerText = '';
+  num1 = '';
+  num2 = '';
+  operator = '';
+}
+
+function backspace() {
+  input.innerText = input.innerText.slice(0, -1);
+  if (input.innerText === '') {
+    input.innerText = '0';
+  }
+}
+
+function updateInput(value) {
+  if (input.innerText === '0') {
+    input.innerText = value;
+  } else {
+    input.innerText += value;
+  }
+}
+
+function selectOperator(value) {
+  operator = value;
+  num1 = input.innerText;
+  input.innerText = '0';
+}
+
+function calculate() {
+  num2 = input.innerText;
+  let result = '';
+  if (operator === '+') {
+    result = parseFloat(num1) + parseFloat(num2);
+  } else if (operator === '-') {
+    result = parseFloat(num1) - parseFloat(num2);
+  } else if (operator === 'x') {
+    result = parseFloat(num1) * parseFloat(num2);
+  } else if (operator === '/') {
+    result = parseFloat(num1) / parseFloat(num2);
+  }
+  input.innerText = result.toFixed(2);
+  output.innerText = `${num1} ${operator} ${num2} = ${result.toFixed(2)}`;
+  num1 = '';
+  num2 = '';
+  operator = '';
+}
+
+document.getElementById('clear').addEventListener('click', clear);
+document.getElementById('backspace').addEventListener('click', backspace);
+document.getElementById('divide').addEventListener('click', () => selectOperator('/'));
+document.getElementById('multiply').addEventListener('click', () => selectOperator('x'));
+document.getElementById('subtract').addEventListener('click', () => selectOperator('-'));
+document.getElementById('add').addEventListener('click', () => selectOperator('+'));
+document.getElementById('equals').addEventListener('click', calculate);
+
+const numbers = document.querySelectorAll('.number');
+numbers.forEach((number) => {
+  number.addEventListener('click', () => {
+    updateInput(number.innerText);
+  });
+});
+
+document.getElementById('decimal').addEventListener('click', () => {
+  if (!input.innerText.includes('.')) {
+    input.innerText += '.';
+  }
+});
